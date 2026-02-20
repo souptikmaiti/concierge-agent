@@ -158,11 +158,16 @@ async def healthcare_concierge_wrapper(
         yield "No LLM configuration available from the extension."
         return
     
-    logger.info(f"LLM Config: {llm_config}")
+    # logger.info(f"LLM Config: {llm_config}")
+    google_api_key = os.getenv("GOOGLE_API_KEY")
+    if not google_api_key:
+        yield trajectory.trajectory_metadata(title="LLM Error", content="GOOGLE_API_KEY environment variable is required.")
+        yield "GOOGLE_API_KEY environment variable is required."
+        return
     
     llm_client = GeminiChatModel(
         model_id=llm_config.api_model.removeprefix("gemini:").removeprefix("models/"),
-        api_key=llm_config.api_key,
+        api_key=google_api_key,
         parameters=ChatModelParameters(
             temperature=0,
             max_tokens=4096,
