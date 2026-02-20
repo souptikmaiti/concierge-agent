@@ -2,6 +2,7 @@ import os
 import json
 from typing import Annotated
 from dotenv import load_dotenv
+import logging
 
 # imports from the beeai_framework
 from beeai_framework.adapters.gemini import GeminiChatModel
@@ -34,6 +35,10 @@ from agentstack_sdk.a2a.extensions import (
 
 from a2a.types import Message, Role, AgentSkill
 from a2a.utils.message import get_message_text
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 server = Server()
@@ -153,8 +158,10 @@ async def healthcare_concierge_wrapper(
         yield "No LLM configuration available from the extension."
         return
     
+    logger.info(f"LLM Config: {llm_config}")
+    
     llm_client = GeminiChatModel(
-        model_id=llm_config.api_model,
+        model_id=llm_config.api_model.removeprefix("gemini:").removeprefix("models/"),
         api_key=llm_config.api_key,
         parameters=ChatModelParameters(
             temperature=0,
