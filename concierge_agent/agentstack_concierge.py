@@ -87,6 +87,16 @@ def summarize_for_trajectory(data: object, limit: int = 400) -> str:
                 description="Google API Key",
                 required=True
             )
+        ],
+        tools=[
+            AgentDetailTool(
+                name="Think",
+                description="Plans the best approach before responding."
+            ),
+            AgentDetailTool(
+                name="Handoff",
+                description="Handoff to a specialist agent."
+            )
         ]
     ),
     skills=[
@@ -95,19 +105,13 @@ def summarize_for_trajectory(data: object, limit: int = 400) -> str:
             name="Healthcare Concierge Agent",
             description="I can help you find information about healthcare, hospitals, and doctors.",
             tags=["healthcare", "hospitals", "doctors"],
-            examples=["What are the best hospitals in New York?", "Which doctors specialize in oncology?", "What is the cost of a routine checkup?"]
+            examples=[
+                "I am recently not able to memorize things. I am based in India. What should I do?",
+                "I live in Bangalore. I am having a lot of pain in my chest. What should I do?",
+                "My friend in Delhi is having systemic sclerosis. What should he do?", 
+            ]
         )
     ],
-    tools=[
-        AgentDetailTool(
-            name="Think",
-            description="Plans the best approach before responding."
-        ),
-        AgentDetailTool(
-            name="Handoff",
-            description="Handoff to a specialist agent."
-        )
-    ]
 )
 async def healthcare_concierge_wrapper(
     message: Message, 
